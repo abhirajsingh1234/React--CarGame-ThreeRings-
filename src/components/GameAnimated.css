@@ -1,0 +1,119 @@
+.game-wrapper {
+    width: 100%;
+    height: 45vh;
+    background-color: #e2d5d5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    /* This creates the 3D space */
+    perspective: 1000px; 
+}
+
+.stage {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+    transform: rotateX(45deg); /* Tilts the whole scene for S-effect */
+}
+
+/* --- PIXEL MARIO --- */
+.mario-container {
+    transform: rotateX(-45deg); /* Counter-tilts Mario so he stands upright */
+    z-index: 10;
+}
+
+.mario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    filter: drop-shadow(0 10px 5px rgba(0,0,0,0.5));
+}
+
+.hat { width: 22px; height: 8px; background: #ff0000; box-shadow: -4px 4px 0 #ff0000; }
+.face { width: 18px; height: 14px; background: #ffdbac; margin-top: -2px; }
+.torso { width: 24px; height: 20px; background: #2563eb; border-left: 6px solid #ff0000; border-right: 6px solid #ff0000; }
+.feet { width: 28px; height: 8px; display: flex; justify-content: space-between; }
+.feet::before, .feet::after { content: ''; width: 10px; height: 8px; background: #5d4037; }
+
+/* --- THE SNAKES --- */
+.snake-orbit {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+}
+
+.snake-body {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /* Masks out the center to leave just a ring 'snake' */
+    -webkit-mask: radial-gradient(transparent 65%, black 66%);
+    mask: radial-gradient(transparent 65%, black 66%);
+}
+
+/* Inner Snake - White/Grey */
+.s-inner {
+    width: 120px;
+    height: 120px;
+    animation: slitherCW 2s linear infinite;
+}
+.s-inner .snake-body {
+    background: conic-gradient(from 0deg, #777272, transparent 40%);
+}
+
+/* Middle Snake - Grey - Opposite Direction */
+.s-middle {
+    width: 220px;
+    height: 220px;
+    animation: slitherCCW 1s linear infinite;
+}
+.s-middle .snake-body {
+    background: conic-gradient(from 0deg, #666, transparent 60%);
+}
+
+/* Outer Snake - Dim Red Glow */
+.s-outer {
+    width: 350px;
+    height: 350px;
+    animation: slitherCW 1s linear infinite;
+}
+.s-outer .snake-body {
+    background: conic-gradient(from 0deg, #ff0000, #8b0000 20%, transparent 50%);
+    filter: drop-shadow(0 0 12px #ff0000);
+}
+
+/* --- ANIMATIONS (The "S" Logic) --- */
+
+/* Clockwise Slither */
+@keyframes slitherCW {
+    0% { 
+        transform: rotateZ(0deg) scale(1); 
+    }
+    25% { 
+        transform: rotateZ(90deg) scaleX(1.1) scaleY(0.9); /* Squish */
+    }
+    50% { 
+        transform: rotateZ(180deg) scale(1); 
+    }
+    75% { 
+        transform: rotateZ(270deg) scaleX(0.9) scaleY(1.1); /* Stretch */
+    }
+    100% { 
+        transform: rotateZ(360deg) scale(1); 
+    }
+}
+
+/* Counter-Clockwise Slither */
+@keyframes slitherCCW {
+    0% { transform: rotateZ(360deg) scale(1); }
+    50% { transform: rotateZ(180deg) scaleX(1.15) scaleY(0.85); }
+    100% { transform: rotateZ(0deg) scale(1); }
+}

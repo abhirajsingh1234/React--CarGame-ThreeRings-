@@ -1,0 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --neon-cyan: #00f5ff;
+  --neon-pink: #ff006e;
+  --neon-yellow: #ffe600;
+  --road-dark: #0a0a0f;
+  --road-mid: #111118;
+  --road-stripe: #ffffff22;
+  --car-player: #00f5ff;
+  --car-enemy: #ff006e;
+  --ui-bg: #0d0d1a;
+  --glow-cyan: 0 0 10px #00f5ff, 0 0 20px #00f5ffaa;
+  --glow-pink: 0 0 10px #ff006e, 0 0 20px #ff006eaa;
+  --glow-yellow: 0 0 10px #ffe600, 0 0 20px #ffe600aa;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #000;
+  font-family: 'Orbitron', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  user-select: none;
+}
+
+/* ── HUD ── */
+.hud {
+  width: 400px;
+  background: var(--ui-bg);
+  border: 1px solid var(--neon-cyan);
+  border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  box-shadow: var(--glow-cyan);
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.hud-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: #ffffff66;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.hud-value {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-shadow: var(--glow-cyan);
+  letter-spacing: 1px;
+}
+
+.hud-value.lives {
+  color: var(--neon-pink);
+  text-shadow: var(--glow-pink);
+}
+
+.hud-value.best {
+  color: var(--neon-yellow);
+  text-shadow: var(--glow-yellow);
+  font-size: 14px;
+}
+
+/* ── CANVAS AREA ── */
+.game-canvas-area {
+  position: relative;
+  width: 400px;
+  height: 550px;
+  overflow: hidden;
+  border-left: 1px solid var(--neon-cyan);
+  border-right: 1px solid var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+  background: var(--road-dark);
+}
+
+canvas#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── OVERLAY (start / game over) ── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(3px);
+  z-index: 10;
+  gap: 14px;
+  animation: fadeIn 0.3s ease;
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.overlay-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--neon-cyan);
+  text-shadow: var(--glow-cyan);
+  letter-spacing: 3px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.overlay-title.gameover {
+  color: var(--neon-pink);
+  text-shadow: var(--glow-pink);
+}
+
+.overlay-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: #ffffff88;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.overlay-score {
+  font-size: 14px;
+  color: var(--neon-yellow);
+  text-shadow: var(--glow-yellow);
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 1px;
+}
+
+/* ── CONTROLS ── */
+.controls-bar {
+  width: 400px;
+  background: var(--ui-bg);
+  border: 1px solid var(--neon-cyan);
+  border-top: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  gap: 10px;
+  box-shadow: var(--glow-cyan);
+}
+
+.ctrl-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.12s ease;
+  outline: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.btn-move {
+  width: 70px;
+  height: 52px;
+  background: #0a0a1f;
+  color: var(--neon-cyan);
+  border: 1.5px solid var(--neon-cyan);
+  box-shadow: inset 0 0 8px #00f5ff22, var(--glow-cyan);
+  font-size: 18px;
+}
+
+.btn-move:hover,
+.btn-move.active {
+  background: #00f5ff18;
+  box-shadow: inset 0 0 18px #00f5ff55, var(--glow-cyan);
+  transform: scale(1.06);
+}
+
+.btn-move:active {
+  transform: scale(0.96);
+  background: #00f5ff33;
+}
+
+.btn-restart {
+  width: 90px;
+  height: 52px;
+  background: #1a0010;
+  color: var(--neon-pink);
+  border: 1.5px solid var(--neon-pink);
+  box-shadow: inset 0 0 8px #ff006e22, var(--glow-pink);
+  font-size: 10px;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.btn-restart span.icon {
+  font-size: 16px;
+}
+
+.btn-restart:hover {
+  background: #ff006e18;
+  box-shadow: inset 0 0 18px #ff006e55, var(--glow-pink);
+  transform: scale(1.06);
+}
+
+.btn-restart:active {
+  transform: scale(0.96);
+}
+
+/* ── SCANLINE OVERLAY ── */
+.game-canvas-area::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.07) 2px,
+    rgba(0,0,0,0.07) 4px
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── SPEED INDICATOR ── */
+.speed-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.speed-bar {
+  width: 80px;
+  height: 6px;
+  background: #ffffff11;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid #ffffff22;
+}
+
+.speed-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-yellow));
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 6px var(--neon-cyan);
+}

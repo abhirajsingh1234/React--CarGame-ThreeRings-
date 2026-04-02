@@ -1,0 +1,139 @@
+:root {
+  --gold: #ffd700;
+  --blood-red: #800000;
+  --ground-dark: #1a0f0a;
+}
+
+.war-zone {
+  width: 100%;
+  height: 100vh;
+  background: radial-gradient(circle at center, #3d0505, #000);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 2s ease;
+}
+
+.blood-sky { background: radial-gradient(circle, #900, #000); }
+
+/* --- BACKGROUND --- */
+.ground {
+  position: absolute; bottom: 0; width: 100%; height: 35%;
+  background: var(--ground-dark);
+  box-shadow: inset 0 20px 100px #000;
+  z-index: 1;
+}
+
+.blood-puddles {
+  position: absolute; width: 100%; height: 100%;
+  background-image: radial-gradient(ellipse at 20% 30%, #400 10%, transparent 40%),
+                    radial-gradient(ellipse at 70% 60%, #500 15%, transparent 50%);
+  opacity: 0.6;
+}
+
+/* --- UI --- */
+.ui-layer {
+  position: absolute; bottom: 40px; z-index: 1000; text-align: center;
+}
+
+.attack-btn {
+  padding: 15px 40px; font-size: 18px; font-weight: bold;
+  background: var(--gold); border: none; border-radius: 4px;
+  cursor: pointer; box-shadow: 0 0 20px var(--gold);
+  transition: 0.3s;
+}
+
+.attack-btn:hover:not(:disabled) { transform: scale(1.1); }
+.attack-btn:disabled { background: #444; box-shadow: none; opacity: 0.5; }
+
+.status-text { color: white; margin-top: 10px; font-family: monospace; }
+
+/* --- THE CHAKRA --- */
+.chakra-wrapper {
+  position: absolute; top: 40px; left: 40px;
+  z-index: 500; transform: scale(0.35);
+  transition: all 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+/* Attacking Target State */
+.strike-animation {
+  top: 42% !important; left: 48% !important;
+  transform: scale(0.7) rotateX(0deg) !important;
+}
+
+.chakra-main-disc {
+  width: 280px; height: 280px; border-radius: 50%;
+  background: conic-gradient(var(--gold), #b8860b, var(--gold));
+  animation: fastSpin 0.1s linear infinite;
+  box-shadow: 0 0 60px var(--gold);
+}
+
+.chakra-spike {
+  position: absolute; width: 15px; height: 60px; background: var(--gold);
+  left: 50%; top: -25px; transform-origin: 50% 165px;
+  transform: translateX(-50%) rotate(calc(var(--i) * 15deg));
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+@keyframes fastSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* --- THE MAN & BEHEADING --- */
+.battle-center { z-index: 200; perspective: 1000px; }
+.scene-container { 
+    position: relative; width: 400px; height: 400px;
+    display: flex; justify-content: center; align-items: center;
+    transform-style: preserve-3d; transform: rotateX(50deg);
+}
+
+.warrior {
+  position: absolute;
+  top: 90%;
+  left: 90%;
+  /* Combine the centering transform with the "Standing Up" rotation */
+  transform: translate(-50%, -50%) rotateX(-55deg); 
+  z-index: 50; /* Keeps him inside/above the rings */
+}
+.head-part { transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+/* BEHEADING PHYSICS */
+.is-beheaded .head-part {
+  transform: translate(150px, 200px) rotate(140deg);
+  opacity: 0.8;
+}
+
+.m-hat { width: 24px; height: 8px; background: #ff0000; box-shadow: -4px 4px 0 #ff0000; }
+.m-face { width: 20px; height: 16px; background: #ffdbac; margin-top: -2px; }
+.m-torso { width: 26px; height: 24px; background: #2563eb; border-left: 6px solid #ff0000; border-right: 6px solid #ff0000; }
+.m-feet { width: 30px; height: 8px; display: flex; justify-content: space-between; }
+.m-feet::before, .m-feet::after { content: ''; width: 12px; height: 8px; background: #5d4037; }
+
+/* --- SNAKE RINGS --- */
+.ring-snake {
+  position: absolute; border-radius: 50%;
+  transform-style: preserve-3d;
+}
+
+.snake-trail {
+  width: 100%; height: 100%; border-radius: 50%;
+  -webkit-mask: radial-gradient(transparent 65%, black 66%);
+}
+
+.r-inner { width: 140px; height: 140px; animation: slither 1s linear infinite; }
+.r-inner .snake-trail { background: conic-gradient(#fff, transparent 60%); }
+
+.r-middle { width: 260px; height: 260px; animation: slither 1s linear reverse infinite; }
+.r-middle .snake-trail { background: conic-gradient(#666, transparent 60%); }
+
+.r-outer { width: 400px; height: 400px; animation: slither 1s linear infinite; }
+.r-outer .snake-trail { 
+    background: conic-gradient(#f00, #400 20%, transparent 60%); 
+    filter: drop-shadow(0 0 10px #f00);
+}
+
+@keyframes slither {
+  0% { transform: rotateZ(0deg) scale(1); }
+  50% { transform: rotateZ(180deg) scale(1.05); } /* Wiggles as it rotates */
+  100% { transform: rotateZ(360deg) scale(1); }
+}
